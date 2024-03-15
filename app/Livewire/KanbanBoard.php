@@ -141,14 +141,10 @@ class KanbanBoard extends Component
     public function moveTask(int $taskId, int $fromColumnId, int $toColumnId, ?int $targetTaskId = null): void
     {
         $task = Task::find($taskId);
-        if (!$task) {
-            return;
-        }
+        if (!$task) return;
 
         $targetColumn = Column::find($toColumnId);
-        if (!$targetColumn) {
-            return;
-        }
+        if (!$targetColumn) return;
 
         $tasksInColumn = Task::where('column_id', $toColumnId)
             ->where('id', '!=', $task->id)
@@ -161,7 +157,6 @@ class KanbanBoard extends Component
                 'column_id' => $toColumnId,
                 'position' => $targetPosition,
             ]);
-
             Task::where('column_id', $toColumnId)
                 ->where('id', '!=', $task->id)
                 ->where('position', '>=', $targetPosition)
@@ -197,24 +192,17 @@ class KanbanBoard extends Component
 
     public function getEditingColumnTitle(): ?string
     {
-        if ($this->columnToDelete) {
-            return Column::find($this->columnToDelete)?->title;
-        }
-        return null;
+        return $this->columnToDelete ? Column::find($this->columnToDelete)?->title : null;
     }
 
     public function getEditingTaskTitle(): ?string
     {
-        if ($this->taskToDelete) {
-            return Task::find($this->taskToDelete)?->title;
-        }
-        return null;
+        return $this->taskToDelete ? Task::find($this->taskToDelete)?->title : null;
     }
 
     public function render()
     {
         $this->board->load('columns.tasks');
-
         return view('livewire.kanban-board');
     }
 }

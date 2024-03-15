@@ -17,7 +17,7 @@
     --color-neon-purple: #C77DFF;
     --color-neon-orange: #FF6B00;
 
-    --color-brutal-bg: #FFFDF7;
+    --color-brutal-bg: #F0EDE5;
     --color-brutal-dark: #1A1A1A;
     --color-brutal-border: #000000;
     --color-brutal-card: #FFFFFF;
@@ -43,9 +43,10 @@
 
 [x-cloak] { display: none !important; }
 
-@utility bg-neon-yellow { background-color: #FFE900; }
-@utility bg-neon-pink { background-color: #FF6B9D; }
-@utility bg-neon-blue { background-color: #00D4FF; }
-@utility bg-neon-green { background-color: #39FF14; }
-@utility bg-neon-purple { background-color: #C77DFF; }
-@utility bg-neon-orange { background-color: #FF6B00; }
+body {
+    background-color: #F0EDE5;
+    background-image:
+        radial-gradient(circle at 25px 25px, rgba(0,0,0,0.04) 2px, transparent 0),
+        radial-gradient(circle at 75px 75px, rgba(0,0,0,0.03) 1px, transparent 0);
+    background-size: 100px 100px;
+}

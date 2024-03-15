@@ -1,0 +1,15 @@
+vendor
+node_modules
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+storage/logs
+public/build
+.git
+.idea
+.vscode
+.env
+tests
+.phpunit.result.cache
+composer.lock
+package-lock.json
