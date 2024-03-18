@@ -6,9 +6,10 @@ COPY --chown=www-data:www-data . /var/www/html
 
 RUN composer install --optimize-autoloader --no-dev
 
-RUN touch /var/www/html/storage/app/database.sqlite && \
-    chown www-data:www-data /var/www/html/storage/app/database.sqlite && \
-    chmod 664 /var/www/html/storage/app/database.sqlite
+RUN mkdir -p /var/www/html/storage/app && \
+    touch /var/www/html/storage/app/database.sqlite && \
+    chown -R www-data:www-data /var/www/html/storage && \
+    chmod -R 775 /var/www/html/storage
 
 RUN php artisan optimize:clear && \
     php artisan view:cache && \

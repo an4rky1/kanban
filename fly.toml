@@ -2,8 +2,6 @@ app = 'kanban-board'
 primary_region = 'ams'
 
 [build]
-  [build.args]
-    PHP_OPCACHE_ENABLE = '1'
 
 [http_service]
   internal_port = 8080
@@ -23,4 +21,4 @@ primary_region = 'ams'
   destination = '/var/www/html/storage/app'
 
 [deploy]
-  release_command = 'php artisan migrate --force'
+  release_command = 'php artisan migrate --force && php artisan db:seed --force'
