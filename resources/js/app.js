@@ -1,8 +1,5 @@
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
 // Mock Echo for deployment without Reverb
+// Livewire v4 already includes and starts Alpine.js
 window.Echo = {
     channel() {
         return {
@@ -22,5 +19,3 @@ window.Echo = {
     leave() {},
     socketId() { return null; }
 };
-
-Alpine.start();

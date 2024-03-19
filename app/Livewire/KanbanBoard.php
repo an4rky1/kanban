@@ -173,7 +173,6 @@ class KanbanBoard extends Component
         $this->normalizePositions($fromColumnId);
 
         $task->refresh();
-        event(new TaskMoved($task, $fromColumnId, $toColumnId));
         $this->board->refresh();
     }
 
