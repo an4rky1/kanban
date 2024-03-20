@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: kanban
+    env: docker
+    region: frankfurt
+    plan: free
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: Kanban
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        sync: false
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        sync: false
+      - key: DB_SSLMODE
+        value: require
+      - key: FILESYSTEM_DISK
+        value: public
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: BROADCAST_CONNECTION
+        value: null
+      - key: LOG_CHANNEL
+        value: errorlog

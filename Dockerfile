@@ -1,21 +1,58 @@
-FROM serversideup/php:8.3-fpm-nginx
+FROM php:8.3-fpm
 
-ENV PHP_OPCACHE_ENABLE=1
+RUN apt-get update && apt-get install -y \
+    nginx \
+    libpq-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    curl \
+    git \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+    pdo_pgsql \
+    pdo_mysql \
+    gd \
+    mbstring \
+    xml \
+    zip \
+    bcmath \
+    opcache \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY --chown=www-data:www-data . /var/www/html
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN composer install --optimize-autoloader --no-dev
+WORKDIR /var/www
 
-RUN mkdir -p /var/www/html/storage/app && \
-    touch /var/www/html/storage/app/database.sqlite && \
-    chown -R www-data:www-data /var/www/html/storage && \
-    chmod -R 775 /var/www/html/storage
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
-RUN php artisan optimize:clear && \
-    php artisan view:cache && \
-    php artisan route:cache && \
-    php artisan config:cache
+COPY . .
 
-EXPOSE 80 443
+RUN composer dump-autoload --optimize --no-dev \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache \
+    && php artisan event:cache
 
-HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost:8080/up || exit 1
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 755 /var/www/storage \
+    && chmod -R 755 /var/www/bootstrap/cache
+
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+
+RUN mkdir -p /var/log/nginx \
+    && mkdir -p /var/run/php
+
+COPY docker/start.sh /usr/local/bin/start
+RUN chmod +x /usr/local/bin/start
+
+EXPOSE 80
+
+CMD ["/usr/local/bin/start"]
