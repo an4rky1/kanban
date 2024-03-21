@@ -20,7 +20,9 @@ services:
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_URL
-        sync: false
+        fromDatabase:
+          name: kanban-db
+          property: connectionString
       - key: DB_SSLMODE
         value: require
       - key: FILESYSTEM_DISK
@@ -35,3 +37,8 @@ services:
         value: null
       - key: LOG_CHANNEL
         value: errorlog
+
+databases:
+  - name: kanban-db
+    plan: free
+    region: frankfurt
