@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $board = Board::factory()->for($user)->create([
             'title' => 'My Kanban Board',
             'slug' => 'my-kanban-board',
-            'description' => 'Interactive task board in neobrutalism style',
+            'description' => null,
         ]);
 
         $columns = [
