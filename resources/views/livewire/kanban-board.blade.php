@@ -49,9 +49,6 @@
                 <h1 class="text-4xl font-bold text-brutal-dark uppercase tracking-wider">
                     {{ $board->title }}
                 </h1>
-                @if ($board->description)
-                    <p class="mt-1 text-base text-brutal-dark/70 font-medium">{{ $board->description }}</p>
-                @endif
             </div>
             <button
                 type="button"
