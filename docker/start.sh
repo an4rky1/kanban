@@ -5,7 +5,9 @@ cd /var/www
 
 # Run migrations if DB is configured
 if [ -n "$DB_URL" ] || [ -n "$DB_HOST" ]; then
-    php artisan migrate --force --no-interaction 2>/dev/null || true
+    echo "Running migrations..."
+    php artisan migrate --force --no-interaction
+    echo "Migrations complete."
 fi
 
 # Start PHP-FPM in background
