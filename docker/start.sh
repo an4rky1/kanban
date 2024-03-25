@@ -3,12 +3,14 @@ set -e
 
 cd /var/www
 
-# Run migrations if DB is configured
-if [ -n "$DB_URL" ] || [ -n "$DB_HOST" ]; then
-    echo "Running migrations..."
-    php artisan migrate --force --no-interaction
-    echo "Migrations complete."
-fi
+# Clear cached config (build-time cache has no env vars)
+php artisan config:clear
+php artisan view:clear
+
+# Run migrations
+echo "Running migrations..."
+php artisan migrate --force --no-interaction
+echo "Migrations complete."
 
 # Start PHP-FPM in background
 php-fpm -D

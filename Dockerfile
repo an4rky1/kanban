@@ -36,7 +36,6 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interactio
 COPY . .
 
 RUN composer dump-autoload --optimize --no-dev \
-    && php artisan config:cache \
     && php artisan route:cache \
     && php artisan event:cache
 
