@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
     pdo_pgsql \
@@ -30,12 +32,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
+COPY composer.json composer.lock package.json package-lock.json ./
+
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction \
+    && npm install --no-audit --no-fund
 
 COPY . .
 
-RUN composer dump-autoload --optimize --no-dev \
+RUN npm run build \
+    && composer dump-autoload --optimize --no-dev \
     && php artisan route:cache \
     && php artisan event:cache
 
