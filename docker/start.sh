@@ -1,19 +1,21 @@
 #!/bin/bash
-set -e
-
 cd /var/www
 
-# Clear cached config (build-time cache has no env vars)
+# Clear caches from build
 php artisan config:clear
 php artisan view:clear
 
-# Run migrations
-echo "Running migrations..."
-php artisan migrate --force --no-interaction
-echo "Migrations complete."
+# Check critical env vars
+if [ -z "$APP_KEY" ]; then
+  echo "!!! ERROR: APP_KEY is missing. Add it to Render Environment variables."
+fi
 
-# Start PHP-FPM in background
+# Run migrations (continue even if they fail so the site can start)
+echo "Running migrations..."
+php artisan migrate --force --no-interaction || echo "Migration failed. Check DB_URL in Environment variables."
+
+# Start PHP-FPM
 php-fpm -D
 
-# Start nginx in foreground
+# Start Nginx
 nginx -g "daemon off;"
