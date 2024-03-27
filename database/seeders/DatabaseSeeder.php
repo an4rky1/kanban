@@ -12,22 +12,24 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::factory()->create([
+        $user = User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => 'password',
         ]);
 
-        $board = Board::factory()->for($user)->create([
+        $board = Board::create([
+            'user_id' => $user->id,
             'title' => 'My Kanban Board',
             'slug' => 'my-kanban-board',
             'description' => null,
         ]);
 
         $columns = [
-            Column::factory()->for($board)->create(['title' => 'To Do', 'position' => 0]),
-            Column::factory()->for($board)->create(['title' => 'In Progress', 'position' => 1]),
-            Column::factory()->for($board)->create(['title' => 'Review', 'position' => 2]),
-            Column::factory()->for($board)->create(['title' => 'Done', 'position' => 3]),
+            Column::create(['board_id' => $board->id, 'title' => 'To Do', 'position' => 0]),
+            Column::create(['board_id' => $board->id, 'title' => 'In Progress', 'position' => 1]),
+            Column::create(['board_id' => $board->id, 'title' => 'Review', 'position' => 2]),
+            Column::create(['board_id' => $board->id, 'title' => 'Done', 'position' => 3]),
         ];
 
         $tasks = [
@@ -60,7 +62,8 @@ class DatabaseSeeder extends Seeder
         foreach ($columns as $column) {
             $columnTasks = $tasks[$column->title] ?? [];
             foreach ($columnTasks as $index => $taskData) {
-                Task::factory()->for($column)->create([
+                Task::create([
+                    'column_id' => $column->id,
                     'title' => $taskData['title'],
                     'description' => $taskData['description'],
                     'color' => $taskData['color'],
