@@ -1,25 +1,30 @@
 #!/bin/bash
 cd /var/www
 
-# Clear caches from build
+# Clear caches
 php artisan config:clear
 php artisan view:clear
 
-# Check critical env vars
+# Check APP_KEY
 if [ -z "$APP_KEY" ]; then
   echo "!!! ERROR: APP_KEY is missing. Add it to Render Environment variables."
 fi
 
-# Run migrations
-echo "Running migrations..."
-php artisan migrate --force --no-interaction || echo "Migration skipped/failed"
+# Migrate
+echo "=== Running Migrations ==="
+php artisan migrate --force --no-interaction
+echo "=== Migrations Done ==="
 
-# Seed database (creates default board)
-echo "Seeding database..."
-php artisan db:seed --force || echo "Seeding skipped/failed"
+# Seed
+echo "=== Seeding Database ==="
+php artisan db:seed --force
+echo "=== Seeding Done ==="
 
-# Start PHP-FPM
+# Check Data
+echo "=== Checking Data ==="
+php artisan tinker --execute="echo 'Users: ' . \App\Models\User::count() . ', Boards: ' . \App\Models\Board::count();"
+echo "=== Data Check Done ==="
+
+# Start
 php-fpm -D
-
-# Start Nginx
 nginx -g "daemon off;"
