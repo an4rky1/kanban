@@ -12,24 +12,25 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            ['name' => 'Test User', 'password' => 'password']
+        );
 
-        $board = Board::create([
-            'user_id' => $user->id,
-            'title' => 'My Kanban Board',
-            'slug' => 'my-kanban-board',
-            'description' => null,
-        ]);
+        $board = Board::firstOrCreate(
+            ['slug' => 'my-kanban-board'],
+            [
+                'user_id' => $user->id,
+                'title' => 'My Kanban Board',
+                'description' => null,
+            ]
+        );
 
-        $columns = [
-            Column::create(['board_id' => $board->id, 'title' => 'To Do', 'position' => 0]),
-            Column::create(['board_id' => $board->id, 'title' => 'In Progress', 'position' => 1]),
-            Column::create(['board_id' => $board->id, 'title' => 'Review', 'position' => 2]),
-            Column::create(['board_id' => $board->id, 'title' => 'Done', 'position' => 3]),
+        $columnsData = [
+            ['title' => 'To Do', 'position' => 0],
+            ['title' => 'In Progress', 'position' => 1],
+            ['title' => 'Review', 'position' => 2],
+            ['title' => 'Done', 'position' => 3],
         ];
 
         $tasks = [
@@ -59,16 +60,22 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        foreach ($columns as $column) {
-            $columnTasks = $tasks[$column->title] ?? [];
+        foreach ($columnsData as $colData) {
+            $column = Column::firstOrCreate(
+                ['board_id' => $board->id, 'title' => $colData['title']],
+                ['position' => $colData['position']]
+            );
+
+            $columnTasks = $tasks[$colData['title']] ?? [];
             foreach ($columnTasks as $index => $taskData) {
-                Task::create([
-                    'column_id' => $column->id,
-                    'title' => $taskData['title'],
-                    'description' => $taskData['description'],
-                    'color' => $taskData['color'],
-                    'position' => $index * 10,
-                ]);
+                Task::firstOrCreate(
+                    ['column_id' => $column->id, 'title' => $taskData['title']],
+                    [
+                        'description' => $taskData['description'],
+                        'color' => $taskData['color'],
+                        'position' => $index * 10,
+                    ]
+                );
             }
         }
     }

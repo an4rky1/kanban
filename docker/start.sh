@@ -5,6 +5,9 @@ cd /var/www
 php artisan config:clear
 php artisan view:clear
 
+# Fix permissions (ensure www-data owns storage)
+chown -R www-data:www-data storage bootstrap/cache
+
 # Check APP_KEY
 if [ -z "$APP_KEY" ]; then
   echo "!!! ERROR: APP_KEY is missing. Add it to Render Environment variables."
