@@ -40,9 +40,7 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interactio
 COPY . .
 
 RUN npm run build \
-    && composer dump-autoload --optimize --no-dev \
-    && php artisan route:cache \
-    && php artisan event:cache
+    && composer dump-autoload --optimize --no-dev
 
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \
