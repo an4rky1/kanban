@@ -40,7 +40,8 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interactio
 COPY . .
 
 RUN npm run build \
-    && composer dump-autoload --optimize --no-dev
+    && composer dump-autoload --optimize --no-dev \
+    && php artisan livewire:publish --assets
 
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \
