@@ -1,9 +1,3 @@
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
-
 // Mock Echo for deployment without Reverb
 window.Echo = {
     channel() { return { listening() { return this; }, stopListening() {}, error() {} }; },
